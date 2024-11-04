@@ -10,12 +10,23 @@ export const getAllProducts = async (
   searchValue = '',
   sortOrder = 'name_asc'
 ) => {
-  const response = await axios.get(
-    `${baseURL}?pageNumber=${pageNumber}&pageSize=${pageSize}&search=${searchValue}&sortOrder=${sortOrder}`
-  );
-  console.log(response);
+  const params = new URLSearchParams();
+
+  params.append('pageNumber', pageNumber);
+  params.append('pageSize', pageSize);
+
+  if (searchValue) {
+    params.append('search', searchValue);
+  }
+
+  if (sortOrder) {
+    params.append('sortOrder', sortOrder);
+  }
+
+  const response = await axios.get(`${baseURL}?${params.toString()}`);
   return response.data;
 };
+
 
 export const getProductById = async (id) => {
   console.log(`${baseURL}/${id}`);
