@@ -1,4 +1,4 @@
-import { Pagination } from '@mui/material';
+import { Box, Pagination } from '@mui/material';
 import React, { useContext } from 'react';
 
 import { ProductContext } from '../context/ProductContext';
@@ -14,14 +14,15 @@ const PaginationComp = () => {
   };
 
   return (
-    <Pagination
-      count={totalPages}
-      page={pageNumber}
-      onChange={handlePageChange}
-      variant="outlined"
-      shape="rounded"
-      sx={{ marginTop: 3 }}
-    />
+    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+      <Pagination
+        count={totalPages}
+        page={pageNumber}
+        onChange={handlePageChange}
+        variant="outlined"
+        shape="rounded"
+      />
+    </Box>
   );
 };
 

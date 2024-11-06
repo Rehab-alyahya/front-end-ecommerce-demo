@@ -22,11 +22,10 @@ export const getAllProducts = async (
   if (sortOrder) {
     params.append('sortOrder', sortOrder);
   }
-
+  console.log(`${baseURL}?${params.toString()}`);
   const response = await axios.get(`${baseURL}?${params.toString()}`);
   return response.data;
 };
-
 
 export const getProductById = async (id) => {
   console.log(`${baseURL}/${id}`);

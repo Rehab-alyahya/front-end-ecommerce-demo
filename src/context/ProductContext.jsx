@@ -15,7 +15,7 @@ export const ProductProvider = ({ children }) => {
   const [pageSize, setPageSize] = useState(5);
   const [sortOrder, setSortOrder] = useState('name_asc');
 
-  const fetchData = async () => {
+  const fetchData = async (searchValue, pageNumber, pageSize, sortOrder) => {
     setIsLoading(true);
     try {
       const response = await getAllProducts(
@@ -25,7 +25,7 @@ export const ProductProvider = ({ children }) => {
         sortOrder
       );
       setProducts(response.data.items);
-      setTotalPages(response.data.totalPages)
+      setTotalPages(response.data.totalPages);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -34,7 +34,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(searchValue, pageNumber, pageSize, sortOrder);
   }, [searchValue, pageNumber, pageSize, sortOrder]);
 
   return (
@@ -51,7 +51,7 @@ export const ProductProvider = ({ children }) => {
         setPageSize,
         sortOrder,
         setSortOrder,
-        totalPages
+        totalPages,
       }}
     >
       {children}
