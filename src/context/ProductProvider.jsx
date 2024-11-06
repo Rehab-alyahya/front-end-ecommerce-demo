@@ -1,9 +1,8 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { getAllProducts } from '../services/productService';
-
-export const ProductContext = createContext();
+import { ProductContext } from './ProductContext';
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);

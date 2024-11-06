@@ -1,35 +1,28 @@
-// src/components/Products.js
-
-import { Typography, Grid, Grid2 } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
+import { Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 import Product from './Product';
-import { ProductContext } from '../../context/ProductContext';
-import Loader from '../Loader';
+import useProduct from '../../hooks/useProduct';
 
 const Products = () => {
-  const { products, isLoading, error } = useContext(ProductContext);
+  const { products, isLoading, error } = useProduct(); // Use the custom hook
 
   if (isLoading) {
-    return <Loader message="Loading products, please wait..." />;
+    return <Typography variant="h2">Loading Products...</Typography>;
   }
-
   if (error) {
-    return (
-      <Loader message="Failed to load products. Please try again." size={70} />
-    );
+    return <Typography variant="h2">{error}</Typography>;
   }
 
   return (
-    <div>
-      <Grid2 container spacing={1}>
-        {products.map((product) => (
-          <Grid2 item xs={12} sm={6} md={4} key={product.productId}>
-            <Product product={product} />
-          </Grid2>
-        ))}
-      </Grid2>
-    </div>
+    <Grid container spacing={2}>
+      {products.map((product) => (
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.productId}>
+          <Product product={product} />
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

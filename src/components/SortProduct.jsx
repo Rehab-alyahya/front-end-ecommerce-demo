@@ -1,9 +1,10 @@
+import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import React, { useContext } from 'react';
-import { ProductContext } from '../context/ProductContext';
+
+import useProduct from '../hooks/useProduct';
 
 const SortProduct = () => {
-  const { sortOrder, setSortOrder } = useContext(ProductContext);
+  const { sortOrder, setSortOrder } = useProduct();
 
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);

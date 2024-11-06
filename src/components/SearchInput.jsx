@@ -1,9 +1,10 @@
+import React from 'react';
 import { TextField } from '@mui/material';
-import React, { useContext } from 'react';
-import { ProductContext } from '../context/ProductContext';
+
+import useProduct from '../hooks/useProduct';
 
 const SearchInput = () => {
-  const { setSearchValue } = useContext(ProductContext);
+  const { setSearchValue } = useProduct();
   const handleSearchChange = (event) => {
     setSearchValue(event.target.value);
   };

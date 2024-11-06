@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Container, Grid, Link, Typography } from '@mui/material';
+import { Box, Container, Link, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 const Footer = () => {
   return (
@@ -7,7 +8,7 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* About Us Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <Typography variant="h6" gutterBottom>
               About Us
             </Typography>
@@ -19,7 +20,7 @@ const Footer = () => {
           </Grid>
 
           {/* Contact Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <Typography variant="h6" gutterBottom>
               Contact Us
             </Typography>
@@ -33,7 +34,7 @@ const Footer = () => {
           </Grid>
 
           {/* Social Media Links Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <Typography variant="h6" gutterBottom>
               Follow Us
             </Typography>

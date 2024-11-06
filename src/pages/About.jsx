@@ -1,8 +1,9 @@
 import React from 'react';
-import { Container, Grid, Typography, Box, Avatar, Paper } from '@mui/material';
+import { Container, Typography, Box, Avatar, Paper } from '@mui/material';
 import { List, ListItem, ListItemIcon } from '@mui/material';
 import { styled } from '@mui/system';
 import { CheckCircle } from '@mui/icons-material';
+import Grid from '@mui/material/Grid2';
 
 const About = () => {
   return (
@@ -22,7 +23,7 @@ const About = () => {
         Meet Our Team
       </Typography>
       <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
           <Paper elevation={3} sx={{ padding: 3, textAlign: 'center' }}>
             <Avatar
               alt="Team Member"
@@ -38,7 +39,7 @@ const About = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
           <Paper elevation={3} sx={{ padding: 3, textAlign: 'center' }}>
             <Avatar
               alt="Team Member"
@@ -54,7 +55,7 @@ const About = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
           <Paper elevation={3} sx={{ padding: 3, textAlign: 'center' }}>
             <Avatar
               alt="Team Member"
@@ -83,7 +84,7 @@ const About = () => {
 
           {/* Mission and Values List */}
           <Grid container spacing={4} justifyContent="center">
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <Paper
                 elevation={3}
                 sx={{ p: 4, textAlign: 'center', borderRadius: 2 }}
@@ -98,7 +99,7 @@ const About = () => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <Paper
                 elevation={3}
                 sx={{ p: 4, textAlign: 'center', borderRadius: 2 }}
@@ -113,7 +114,7 @@ const About = () => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <Paper
                 elevation={3}
                 sx={{ p: 4, textAlign: 'center', borderRadius: 2 }}
@@ -128,7 +129,7 @@ const About = () => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <Paper
                 elevation={3}
                 sx={{ p: 4, textAlign: 'center', borderRadius: 2 }}

@@ -1,5 +1,6 @@
-import { Container, Typography, Box, Grid2 } from '@mui/material';
 import React from 'react';
+import { Container, Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 import Products from '../components/products/Products';
 import SearchInput from '../components/SearchInput';
@@ -15,19 +16,19 @@ const Home = () => {
 
       {/* Search and Sort Row */}
       <Box sx={{ mb: 4 }}>
-        <Grid2
+        <Grid
           container
           spacing={2}
           justifyContent="space-between"
           alignItems="center"
         >
-          <Grid2 item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <SearchInput />
-          </Grid2>
-          <Grid2 item xs={12} md={3}>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
             <SortProduct />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Box>
 
       {/* Products List */}

@@ -9,8 +9,8 @@ import {
   Grid,
   Divider,
 } from '@mui/material';
-import Loader from '../components/Loader';
 
+import Loader from '../components/Loader';
 import { getProductById } from '../services/productService';
 
 const ProductDetails = () => {
