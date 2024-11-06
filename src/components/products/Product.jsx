@@ -8,8 +8,10 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useCart from '../../hooks/useCart';
 
 const Product = ({ product }) => {
+  const { addToCart } = useCart();
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Product Image */}
@@ -66,6 +68,18 @@ const Product = ({ product }) => {
           sx={{ marginTop: 'auto' }} // Push the button to the bottom
         >
           Show Details
+        </Button>
+
+        <Button
+          // component={Link}
+          // to={`/products/${product.productId}`}
+          variant="contained"
+          color="secondary"
+          fullWidth
+          sx={{ marginTop: '16px' }} // Push the button to the bottom
+          onClick={() => addToCart(product)}
+        >
+          Add To Cart
         </Button>
       </CardContent>
     </Card>
