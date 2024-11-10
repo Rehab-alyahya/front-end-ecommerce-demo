@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+} from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -17,24 +24,24 @@ const UserSidebar = () => {
       }}
     >
       <List>
-        <ListItem button component={Link} to="/dashboard/user">
+        <ListItemButton component={Link} to="/dashboard/user">
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem button component={Link} to="profile">
+        </ListItemButton>
+        <ListItemButton component={Link} to="profile">
           <ListItemIcon>
             <PersonIcon />
           </ListItemIcon>
           <ListItemText primary="Profile" />
-        </ListItem>
-        <ListItem button component={Link} to="orders">
+        </ListItemButton>
+        <ListItemButton component={Link} to="orders">
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="Orders" />
-        </ListItem>
+        </ListItemButton>
       </List>
     </Box>
   );
