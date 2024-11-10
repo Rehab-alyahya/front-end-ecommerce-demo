@@ -1,16 +1,19 @@
 import React from 'react';
 
 import Routes from './routes';
-import { ProductProvider } from './context/ProductProvider';
 import { CartProvider } from './context/CartProvider';
+import { ProductProvider } from './context/ProductProvider';
+import { UserProvider } from './context/UserProvider';
 
 const App = () => {
   return (
-    <ProductProvider>
-      <CartProvider>
-        <Routes />
-      </CartProvider>
-    </ProductProvider>
+    <UserProvider>
+      <ProductProvider>
+        <CartProvider>
+          <Routes />
+        </CartProvider>
+      </ProductProvider>
+    </UserProvider>
   );
 };
 
