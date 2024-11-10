@@ -4,17 +4,20 @@ import Grid from '@mui/material/Grid2';
 
 import Product from './Product';
 import useProduct from '../../hooks/useProduct';
+import Loader from '../Loader';
 
 const Products = () => {
   const { products, isLoading, error } = useProduct(); // Use the custom hook
 
   if (isLoading) {
-    return <Typography variant="h2">Loading Products...</Typography>;
-  }
-  if (error) {
-    return <Typography variant="h2">{error}</Typography>;
+    return <Loader message="Loading products, please wait..." />;
   }
 
+  if (error) {
+    return (
+      <Loader message="Failed to load products. Please try again." size={70} />
+    );
+  }
   return (
     <Grid container spacing={2}>
       {products.map((product) => (

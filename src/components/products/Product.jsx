@@ -11,7 +11,11 @@ import { Link } from 'react-router-dom';
 import useCart from '../../hooks/useCart';
 
 const Product = ({ product }) => {
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
+
+  // Check if the product is already in the cart
+  const isInCart = cart.some((item) => item.productId === product.productId);
+
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Product Image */}
@@ -70,16 +74,16 @@ const Product = ({ product }) => {
           Show Details
         </Button>
 
+        {/* Add To Cart Button */}
         <Button
-          // component={Link}
-          // to={`/products/${product.productId}`}
           variant="contained"
           color="secondary"
           fullWidth
-          sx={{ marginTop: '16px' }} // Push the button to the bottom
+          sx={{ marginTop: '16px' }}
           onClick={() => addToCart(product)}
+          disabled={isInCart} // Disable button if product is in cart
         >
-          Add To Cart
+          {isInCart ? 'Already in Cart' : 'Add To Cart'}
         </Button>
       </CardContent>
     </Card>

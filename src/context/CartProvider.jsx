@@ -53,6 +53,20 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem('cart'); // Remove the cart from localStorage
   };
 
+  const updateQuantity = (productId, quantity) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) => {
+        if (item.productId === productId) {
+          return { ...item, quantity: Math.max(1, quantity) }; // Ensure quantity is at least 1
+        }
+        return item;
+      });
+
+      saveCartToLocalStorage(updatedCart); // Save the updated cart to localStorage
+      return updatedCart;
+    });
+  };
+
   // Synchronize cart with localStorage whenever it changes
   useEffect(() => {
     saveCartToLocalStorage(cart);
@@ -60,7 +74,7 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart }}
+      value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}
     >
       {children}
     </CartContext.Provider>

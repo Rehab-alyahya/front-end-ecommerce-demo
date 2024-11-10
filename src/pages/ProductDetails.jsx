@@ -6,15 +6,18 @@ import {
   Card,
   CardMedia,
   CardContent,
-  Grid,
   Divider,
+  Button,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 import Loader from '../components/Loader';
 import { getProductById } from '../services/productService';
+import useCart from '../hooks/useCart';
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const { cart, addToCart } = useCart(); // Get cart data and addToCart function
 
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +47,9 @@ const ProductDetails = () => {
       <Loader message="Failed to load products. Please try again." size={70} />
     );
   }
+
+  // Check if the product is already in the cart
+  const isInCart = cart.some((item) => item.productId === product.productId);
 
   // Destructure product properties
   const {
@@ -79,23 +85,23 @@ const ProductDetails = () => {
           <Divider style={{ margin: '20px 0' }} />
 
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Typography variant="h6">Price:</Typography>
               <Typography variant="body1">${price.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Typography variant="h6">Quantity Available:</Typography>
               <Typography variant="body1">{quantity}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Typography variant="h6">Shipping Cost:</Typography>
               <Typography variant="body1">${shipping.toFixed(2)}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <Typography variant="h6">Items Sold:</Typography>
               <Typography variant="body1">{sold}</Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6">Created At:</Typography>
               <Typography variant="body1">
                 {new Date(createdAt).toLocaleDateString()}{' '}
@@ -103,6 +109,17 @@ const ProductDetails = () => {
               </Typography>
             </Grid>
           </Grid>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            sx={{ marginTop: '16px' }} // Push the button to the bottom
+            onClick={() => addToCart(product)}
+            disabled={isInCart} // Disable if product is in cart
+          >
+            {isInCart ? 'Already in Cart' : 'Add To Cart'}
+          </Button>
         </CardContent>
       </Card>
     </Container>
