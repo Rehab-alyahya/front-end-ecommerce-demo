@@ -31,3 +31,32 @@ export const getProductById = async (id) => {
   const response = await axios.get(`${baseURL}/${id}`);
   return response.data;
 };
+
+export const createProduct = async (productData) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.post(`${baseURL}/`, productData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const updateProduct = async (id, productData) => {
+  const token = localStorage.getItem('token');
+  const response = await axios.put(`${baseURL}/${id}`, productData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const deleteProduct = async (id) => {
+  const token = localStorage.getItem('token');
+  await axios.delete(`${baseURL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

@@ -6,10 +6,16 @@ import Products from '../components/products/Products';
 import SearchInput from '../components/SearchInput';
 import PaginationComp from '../components/PaginationComp';
 import SortProduct from '../components/SortProduct';
+import useProduct from '../hooks/useProduct';
+import PageTitle from '../components/PageTitle';
 
 const Home = () => {
+  const { pageNumber, setPageNumber, totalPages, setSearchValue } =
+    useProduct();
+
   return (
     <Container>
+      <PageTitle title="home" />
       {/* <Typography variant="h4" gutterBottom align="center">
         Products
       </Typography> */}
@@ -23,7 +29,10 @@ const Home = () => {
           alignItems="center"
         >
           <Grid size={{ xs: 12, md: 6 }}>
-            <SearchInput />
+            <SearchInput
+              setSearchValue={setSearchValue}
+              label={'Search products...'}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <SortProduct />
@@ -36,7 +45,11 @@ const Home = () => {
 
       {/* Pagination */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <PaginationComp />
+        <PaginationComp
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+          totalPages={totalPages}
+        />
       </Box>
     </Container>
   );

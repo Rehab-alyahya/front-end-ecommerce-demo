@@ -46,6 +46,10 @@ const Routes = () => {
           path: '/about',
           element: <About />,
         },
+        // {
+        //   path: '/signout',
+        //   element: <Home />,
+        // },
         {
           path: '/products/:id',
           element: <ProductDetails />,

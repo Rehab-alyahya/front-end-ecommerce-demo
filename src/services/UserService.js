@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost:5021/api/users';
+const authURL = 'http://localhost:5021/api/auth';
 
 export const createUser = async (userData) => {
   const response = await axios.post(`${baseURL}/`, userData);
@@ -13,6 +14,7 @@ export const getAllUsers = async (
   searchValue = '',
   sortOrder = 'name_asc'
 ) => {
+  const token = localStorage.getItem('token');
   const params = new URLSearchParams();
 
   params.append('pageNumber', pageNumber);
@@ -26,15 +28,47 @@ export const getAllUsers = async (
     params.append('sortOrder', sortOrder);
   }
 
-  const response = await axios.get(`${baseURL}?${params.toString()}`);
+  const response = await axios.get(`${baseURL}?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const getUserById = async (id) => {
+  console.log('id: ' + id);
+  const token = localStorage.getItem('token');
+  const response = await axios.get(`${baseURL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export const deleteUser = async (id) => {
-  await axios.delete(`${baseURL}/${id}`);
+  const token = localStorage.getItem('token');
+  await axios.delete(`${baseURL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const updateUser = async (id, userData) => {
-  const response = await axios.put(`${baseURL}/${id}`, userData);
+  console.log(id);
+  console.log(userData);
+  const token = localStorage.getItem('token');
+  const response = await axios.put(`${baseURL}/${id}`, userData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export const loginUser = async (credentials) => {
+  const response = await axios.post(`${authURL}/signin`, credentials);
   return response.data;
 };

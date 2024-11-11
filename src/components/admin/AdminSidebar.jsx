@@ -19,10 +19,11 @@ const AdminSidebar = () => {
   return (
     <Box
       sx={{
-        width: 250,
-        borderRight: '1px solid #ddd',
-        height: '100vh',
+        width: { xs: '100%', md: 250 },
+        borderRight: { md: '1px solid #ddd' },
+        height: { md: '100vh' },
         padding: 2,
+        borderBottom: { xs: '1px solid #ddd', md: 'none' },
       }}
     >
       <List>

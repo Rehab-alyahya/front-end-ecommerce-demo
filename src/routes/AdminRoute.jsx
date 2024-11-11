@@ -3,10 +3,11 @@ import { Outlet } from 'react-router-dom';
 import SignIn from '../pages/SignIn';
 
 const AdminRoute = () => {
-  // api call
-  // redux-store ->user login or not?
-  const isSignedIn = true;
-  const isAdmin = true;
+  // Check localStorage for login status and admin status
+  const isSignedIn = localStorage.getItem('loginStatus') === 'true';
+  const user = JSON.parse(localStorage.getItem('user'));
+  const isAdmin = user?.isAdmin || false;
+
   return isSignedIn && isAdmin ? <Outlet /> : <SignIn />;
 };
 

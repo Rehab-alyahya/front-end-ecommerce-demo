@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Box,
@@ -34,9 +34,7 @@ const UsersList = () => {
     setSortOrder,
   } = useUser();
 
-  useEffect(() => {
-    fetchUsers(pageNumber, pageSize);
-  }, []);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const handleDelete = async (id) => {
     try {
@@ -44,11 +42,6 @@ const UsersList = () => {
     } catch (err) {
       console.error('Failed to delete user:', err);
     }
-  };
-
-  const handleUpdate = (id) => {
-    // Add update logic here, e.g., open a modal with user details
-    console.log('Update user:', id);
   };
 
   return (
@@ -62,7 +55,10 @@ const UsersList = () => {
           alignItems="center"
         >
           <Grid size={{ xs: 12, md: 6 }}>
-            <SearchInput />
+            <SearchInput
+              setSearchValue={setSearchValue}
+              label={'Search users...'}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             {/* You can add a sort component if needed */}
@@ -71,7 +67,13 @@ const UsersList = () => {
       </Box>
 
       {/* Users Table */}
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          overflowX: 'scroll',
+          display: { xs: 'block', sm: 'block', md: 'table' },
+        }}
+      >
         {isLoading ? (
           <CircularProgress />
         ) : error ? (
@@ -88,20 +90,28 @@ const UsersList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.userId}>
+              {users.map((user, index) => (
+                <TableRow
+                  key={user.userId}
+                  onClick={() => setSelectedUserId(user.userId)}
+                  sx={{
+                    backgroundColor:
+                      selectedUserId === user.userId
+                        ? 'rgba(0, 123, 255, 0.2)'
+                        : index % 2 === 0
+                        ? 'rgba(0, 0, 0, 0.04)'
+                        : 'white',
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    },
+                    cursor: 'pointer',
+                  }}
+                >
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.address}</TableCell>
                   <TableCell>{user.phone}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleUpdate(user.userId)}
-                    >
-                      Update
-                    </Button>
                     <Button
                       variant="outlined"
                       color="secondary"
@@ -119,7 +129,11 @@ const UsersList = () => {
       </TableContainer>
 
       {/* Pagination */}
-      <PaginationComp />
+      <PaginationComp
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
+        totalPages={totalPages}
+      />
     </Container>
   );
 };

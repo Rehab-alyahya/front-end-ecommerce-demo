@@ -6,8 +6,13 @@ import { Outlet } from 'react-router-dom';
 
 const UserDashboard = () => {
   return (
-    <Box display="flex">
-      <UserSidebar />
+    <Box
+      display={{ xs: 'block', md: 'flex' }}
+      flexDirection={{ xs: 'column', md: 'row' }}
+    >
+      <Box sx={{ width: '100%', mb: { xs: 2, md: 0 } }}>
+        <UserSidebar />
+      </Box>
       <Container>
         <Typography variant="h4" gutterBottom>
           User Dashboard

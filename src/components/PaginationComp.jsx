@@ -1,17 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Box, Pagination } from '@mui/material';
 
-import useProduct from '../hooks/useProduct';
-
-const PaginationComp = () => {
-  const { pageNumber, setPageNumber, totalPages } = useProduct();
-
-  const handlePageChange = (value) => {
+const PaginationComp = ({ pageNumber, totalPages, setPageNumber }) => {
+  // Function to handle page change event
+  const handlePageChange = (event, value) => {
     setPageNumber(value);
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
       <Pagination
         count={totalPages}
         page={pageNumber}
@@ -21,6 +19,12 @@ const PaginationComp = () => {
       />
     </Box>
   );
+};
+
+PaginationComp.propTypes = {
+  pageNumber: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  setPageNumber: PropTypes.func.isRequired,
 };
 
 export default PaginationComp;
