@@ -1,59 +1,117 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Box,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
+
 import CartIcon from '../components/cart/CartIcon';
+import { useAuth } from '../hooks/useAuth';
 
 const Navbar = () => {
-  const isLoggedIn = localStorage.getItem('loginStatus') === 'true';
+  const { isLoggedIn, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('loginStatus');
-    navigate('/signin');
+  const toggleDrawer = (open) => {
+    setIsDrawerOpen(open);
   };
+
+  const navItems = [
+    { label: 'Home', to: '/' },
+    { label: 'Sign up', to: '/signup', hide: isLoggedIn },
+    { label: 'Sign in', to: '/signin', hide: isLoggedIn },
+    isAdmin && {
+      label: 'Admin Dashboard',
+      to: '/dashboard/admin',
+      show: isLoggedIn,
+    },
+    isLoggedIn &&
+      !isAdmin && {
+        label: 'User Dashboard',
+        to: '/dashboard/user',
+        show: isLoggedIn,
+      },
+    { label: 'Cart', to: '/cart', icon: <CartIcon /> },
+    { label: 'About', to: '/about' },
+    { label: 'faq', to: '/faq' },
+    isLoggedIn && { label: 'Logout', action: logout, show: true },
+  ].filter(Boolean);
 
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Anisul Express
         </Typography>
-        <Button color="inherit" component={Link} to="/">
-          Home
-        </Button>
-        {!isLoggedIn && (
-          <Button color="inherit" component={Link} to="/signup">
-            Sign up
-          </Button>
-        )}
-        {!isLoggedIn && (
-          <Button color="inherit" component={Link} to="/signin">
-            Sign in
-          </Button>
-        )}
-        {isLoggedIn && (
-          <Button color="inherit" component={Link} to="/dashboard/user">
-            User Dashboard
-          </Button>
-        )}
-        {isLoggedIn && (
-          <Button color="inherit" component={Link} to="/dashboard/admin">
-            Admin Dashboard
-          </Button>
-        )}
-        <Button color="inherit" component={Link} to="/cart">
-          <CartIcon />
-        </Button>
-        <Button color="inherit" component={Link} to="/about">
-          About
-        </Button>
-        {isLoggedIn && (
-          <Button color="inherit" onClick={handleLogout}>
-            Logout
-          </Button>
-        )}
+
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={() => toggleDrawer(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          {navItems.map(
+            (item) =>
+              !item.hide &&
+              (!item.show || item.show === isLoggedIn) && (
+                <Button
+                  key={item.label}
+                  color="inherit"
+                  component={item.to ? Link : 'button'}
+                  to={item.to}
+                  onClick={item.action}
+                >
+                  {item.icon || item.label}
+                </Button>
+              )
+          )}
+        </Box>
+
+        <Drawer
+          anchor="left"
+          open={isDrawerOpen}
+          onClose={() => toggleDrawer(false)}
+        >
+          <List sx={{ width: 250 }}>
+            {navItems.map(
+              (item) =>
+                !item.hide &&
+                (!item.show || item.show === isLoggedIn) && (
+                  <ListItem
+                    key={item.label}
+                    disablePadding
+                    onClick={() => {
+                      toggleDrawer(false);
+                      if (item.action) item.action();
+                    }}
+                  >
+                    <ListItemButton
+                      component={item.to ? Link : 'button'}
+                      to={item.to}
+                    >
+                      <ListItemText primary={item.label} />
+                    </ListItemButton>
+                  </ListItem>
+                )
+            )}
+          </List>
+        </Drawer>
       </Toolbar>
     </AppBar>
   );

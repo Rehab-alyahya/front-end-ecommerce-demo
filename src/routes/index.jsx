@@ -19,6 +19,7 @@ import AdminMangeProducts from '../components/admin/AdminMangeProducts';
 import AdminManageCategories from '../components/admin/AdminManageCategories';
 import AdminRoute from './AdminRoute';
 import PortectedRoute from './ProtectdRoute';
+import FAQ from '../pages/FAQ';
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const Routes = () => {
         {
           path: '/about',
           element: <About />,
+        },
+        {
+          path: '/faq',
+          element: <FAQ />,
         },
         // {
         //   path: '/signout',

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost:5021/api/users';
-const authURL = 'http://localhost:5021/api/auth';
 
 export const createUser = async (userData) => {
   const response = await axios.post(`${baseURL}/`, userData);
@@ -12,9 +11,9 @@ export const getAllUsers = async (
   pageNumber = 1,
   pageSize = 5,
   searchValue = '',
-  sortOrder = 'name_asc'
+  sortOrder = 'name_asc',
+  token
 ) => {
-  const token = localStorage.getItem('token');
   const params = new URLSearchParams();
 
   params.append('pageNumber', pageNumber);
@@ -57,18 +56,11 @@ export const deleteUser = async (id) => {
 };
 
 export const updateUser = async (id, userData) => {
-  console.log(id);
-  console.log(userData);
   const token = localStorage.getItem('token');
   const response = await axios.put(`${baseURL}/${id}`, userData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
-};
-
-export const loginUser = async (credentials) => {
-  const response = await axios.post(`${authURL}/signin`, credentials);
   return response.data;
 };

@@ -13,17 +13,16 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+
 import { useUser } from '../../hooks/useUser';
-import SearchInput from '../SearchInput';
-import PaginationComp from '../PaginationComp';
+import { useAuth } from '../../hooks/useAuth';
 
 const UsersList = () => {
+  const { isAdmin, isLoggedIn, token } = useAuth(); // Access from AuthProvider
   const {
     users,
     fetchUsers,
     removeUser,
-    modifyUser,
     isLoading,
     error,
     pageNumber,
@@ -31,42 +30,29 @@ const UsersList = () => {
     totalPages,
     setSearchValue,
     setPageNumber,
+    sortOrder,
     setSortOrder,
   } = useUser();
 
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+  // Fetch users only if the user is logged in and isAdmin
+  useEffect(() => {
+    if (isLoggedIn && isAdmin) {
+      fetchUsers('', pageNumber, pageSize, 'name_asc', token); // Pass token if needed
+    }
+  }, [isLoggedIn, isAdmin, pageNumber, pageSize, token]);
+
   const handleDelete = async (id) => {
     try {
-      await removeUser(id);
+      await removeUser(id, token); // Pass token if needed
     } catch (err) {
       console.error('Failed to delete user:', err);
     }
   };
 
   return (
-    <Container>
-      {/* Search and Sort Row */}
-      <Box sx={{ mb: 4 }}>
-        <Grid
-          container
-          spacing={2}
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid size={{ xs: 12, md: 6 }}>
-            <SearchInput
-              setSearchValue={setSearchValue}
-              label={'Search users...'}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            {/* You can add a sort component if needed */}
-          </Grid>
-        </Grid>
-      </Box>
 
-      {/* Users Table */}
       <TableContainer
         component={Paper}
         sx={{
@@ -101,9 +87,7 @@ const UsersList = () => {
                         : index % 2 === 0
                         ? 'rgba(0, 0, 0, 0.04)'
                         : 'white',
-                    '&:hover': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                    },
+                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.1)' },
                     cursor: 'pointer',
                   }}
                 >
@@ -127,14 +111,7 @@ const UsersList = () => {
           </Table>
         )}
       </TableContainer>
-
-      {/* Pagination */}
-      <PaginationComp
-        pageNumber={pageNumber}
-        setPageNumber={setPageNumber}
-        totalPages={totalPages}
-      />
-    </Container>
+   
   );
 };
 

@@ -8,14 +8,16 @@ import {
   Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/UserService';
+import { motion } from 'framer-motion';
+
+import { useAuth } from '../hooks/useAuth';
+import { loginUser } from '../services/authService';
 
 const Signin = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth(); // Access login from AuthProvider
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,10 +38,12 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
     const validationError = validateInput();
     if (validationError) {
       setError(validationError);
+      setIsSubmitting(false);
       return;
     }
 
@@ -49,12 +53,8 @@ const Signin = () => {
         password: formData.password,
       });
 
-      // Store user data and token in local storage
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      localStorage.setItem('loginStatus', 'true');
+      login(response.data.user, response.data.token); // Set user and token in AuthProvider
 
-      // Navigate based on user role
       if (response.data.user.isAdmin) {
         navigate('/dashboard/admin');
       } else {
@@ -64,51 +64,86 @@ const Signin = () => {
       setError(
         'Failed to sign in. Please check your credentials and try again.'
       );
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const fieldVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1 },
+    }),
   };
 
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 5 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Sign In
-        </Typography>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Typography variant="h4" component="h1" gutterBottom>
             Sign In
-          </Button>
-        </form>
+          </Typography>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <form onSubmit={handleSubmit}>
+            {['email', 'password'].map((field, index) => (
+              <motion.div
+                key={field}
+                custom={index}
+                variants={fieldVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ scale: 1.05 }}
+              >
+                <TextField
+                  fullWidth
+                  label={field.charAt(0).toUpperCase() + field.slice(1)}
+                  name={field}
+                  type={field === 'password' ? 'password' : 'text'}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  margin="normal"
+                  required
+                />
+              </motion.div>
+            ))}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 500 }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ mt: 2 }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  >
+                    Signing In...
+                  </motion.span>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </motion.div>
+          </form>
+        </motion.div>
       </Box>
     </Container>
   );

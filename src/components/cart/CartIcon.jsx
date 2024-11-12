@@ -13,7 +13,8 @@ const CartIcon = () => {
   return (
     <IconButton aria-label="cart">
       <Badge badgeContent={itemCount} color="error">
-        <ShoppingCartIcon />
+        <ShoppingCartIcon sx={{ color: 'white' }} />{' '}
+        {/* Set icon color to white */}
       </Badge>
     </IconButton>
   );

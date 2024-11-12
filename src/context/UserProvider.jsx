@@ -1,11 +1,13 @@
-// UserProvider Component
+// UserProvider.js
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { getAllUsers, deleteUser, updateUser } from '../services/UserService';
+import { getAllUsers, deleteUser, updateUser } from '../services/userService';
 import { UserContext } from './UserContext';
+import { useAuth } from '../hooks/useAuth';
 
 export const UserProvider = ({ children }) => {
+  const { token } = useAuth(); // Get token from AuthProvider
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,14 +17,15 @@ export const UserProvider = ({ children }) => {
   const [pageSize, setPageSize] = useState(5);
   const [sortOrder, setSortOrder] = useState('name_asc');
 
-  const fetchUsers = async (searchValue, pageNumber, pageSize, sortOrder) => {
+  const fetchUsers = async () => {
     setIsLoading(true);
     try {
       const response = await getAllUsers(
         pageNumber,
         pageSize,
         searchValue,
-        sortOrder
+        sortOrder,
+        token
       );
       setUsers(response.data.items);
       setTotalPages(response.data.totalPages);
@@ -35,11 +38,11 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUsers(searchValue, pageNumber, pageSize, sortOrder);
+    fetchUsers();
   }, [searchValue, pageNumber, pageSize, sortOrder]);
 
   const removeUser = async (id) => {
-    await deleteUser(id);
+    await deleteUser(id, token);
     setUsers((prevUsers) => prevUsers.filter((user) => user.userId !== id));
   };
 

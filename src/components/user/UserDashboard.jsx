@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
 import UserSidebar from './UserSidebar';
-import { Outlet } from 'react-router-dom';
 
 const UserDashboard = () => {
   return (

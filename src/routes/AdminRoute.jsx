@@ -1,14 +1,14 @@
+// AdminRoute.js
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+
 import SignIn from '../pages/SignIn';
+import { useAuth } from '../hooks/useAuth';
 
 const AdminRoute = () => {
-  // Check localStorage for login status and admin status
-  const isSignedIn = localStorage.getItem('loginStatus') === 'true';
-  const user = JSON.parse(localStorage.getItem('user'));
-  const isAdmin = user?.isAdmin || false;
+  const { isLoggedIn, isAdmin } = useAuth();
 
-  return isSignedIn && isAdmin ? <Outlet /> : <SignIn />;
+  return isLoggedIn && isAdmin ? <Outlet /> : <SignIn />;
 };
 
 export default AdminRoute;

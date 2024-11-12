@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Typography,
@@ -6,75 +6,59 @@ import {
   CircularProgress,
   Paper,
   Avatar,
-  Grid,
   Button,
   TextField,
+  Alert,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
-import { getUserById, updateUser } from '../../services/UserService';
+import Grid from '@mui/material/Grid2';
+
+import { useAuth } from '../../hooks/useAuth';
+import { useUser } from '../../hooks/useUser';
 
 const UserManageProfile = () => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, setUser } = useAuth(); // Access user and token from AuthProvider
+  const { modifyUser } = useUser(); // Use modifyUser to update user profile
+  const [localUser, setLocalUser] = useState(user || { name: '', address: '' });
   const [isEditing, setIsEditing] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-
+  // Keep local state in sync with user data
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem('user')); // Assuming userId is stored in localStorage
-        if (user && user.userId) {
-          const userData = await getUserById(user.userId);
-          setUser(userData.data);
-        }
-      } catch (err) {
-        setError('Failed to fetch user data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (user) {
+      setLocalUser(user);
+    }
+  }, [user]);
 
-    fetchUser();
-  }, []);
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
+  const handleEditClick = () => setIsEditing(true);
 
   const handleSaveClick = async () => {
+    setError(null);
+    setUpdateLoading(true);
     try {
-      if (user) {
-        const updatedData = { name: user.name, address: user.address }; // Only updating name and address
-        await updateUser(user.userId, updatedData);
-        setUser(updatedData);
-        setIsEditing(false);
-      }
-    } catch (err) {
+      const updatedData = {
+        name: localUser.name || '',
+        address: localUser.address || '',
+      };
+      // await modifyUser(localUser.userId, updatedData);
+      // setUser({ ...user, ...updatedData }); // Update AuthProvider's user state
+      setIsEditing(false);
+    } catch {
       setError('Failed to update user profile');
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    setLocalUser((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
-  if (isLoading) {
+  if (!user) {
     return (
       <Container>
         <CircularProgress sx={{ display: 'block', margin: '2rem auto' }} />
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Typography variant="h6" color="error" align="center" sx={{ mt: 2 }}>
-          {error}
-        </Typography>
       </Container>
     );
   }
@@ -84,7 +68,7 @@ const UserManageProfile = () => {
       <Paper elevation={3} sx={{ padding: 4, mt: 4 }}>
         <Box display="flex" flexDirection="column" alignItems="center">
           <Avatar
-            alt={user?.name}
+            alt={localUser?.name || ''}
             src="/static/images/avatar/1.jpg" // Replace with user.imageUrl if available
             sx={{ width: 100, height: 100, mb: 2 }}
           />
@@ -93,7 +77,7 @@ const UserManageProfile = () => {
               <TextField
                 label="Name"
                 name="name"
-                value={user?.name || ''}
+                value={localUser.name || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -101,44 +85,49 @@ const UserManageProfile = () => {
               <TextField
                 label="Address"
                 name="address"
-                value={user?.address || ''}
+                value={localUser.address || ''}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
               />
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 3 }}
-                onClick={handleSaveClick}
-              >
-                Save
-              </Button>
+              {updateLoading ? (
+                <CircularProgress size={24} sx={{ mt: 3 }} />
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 3 }}
+                  onClick={handleSaveClick}
+                >
+                  Save
+                </Button>
+              )}
             </>
           ) : (
             <>
               <Typography variant="h4" gutterBottom>
-                {user?.name}
+                {localUser.name}
               </Typography>
               <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid xs={12} sm={6}>
                   <Typography variant="subtitle1">
-                    <strong>Email:</strong> {user?.email}
+                    <strong>Email:</strong> {localUser.email || 'N/A'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid xs={12} sm={6}>
                   <Typography variant="subtitle1">
-                    <strong>Phone:</strong> {user?.phone || 'N/A'}
+                    <strong>Phone:</strong> {localUser.phone || 'N/A'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid xs={12} sm={6}>
                   <Typography variant="subtitle1">
-                    <strong>Address:</strong> {user?.address || 'N/A'}
+                    <strong>Address:</strong> {localUser.address || 'N/A'}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid xs={12} sm={6}>
                   <Typography variant="subtitle1">
-                    <strong>Role:</strong> {user?.isAdmin ? 'Admin' : 'User'}
+                    <strong>Role:</strong>{' '}
+                    {localUser.isAdmin ? 'Admin' : 'User'}
                   </Typography>
                 </Grid>
               </Grid>
@@ -151,6 +140,11 @@ const UserManageProfile = () => {
                 Edit Profile
               </Button>
             </>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
           )}
         </Box>
       </Paper>

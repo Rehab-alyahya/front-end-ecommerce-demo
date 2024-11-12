@@ -1,13 +1,14 @@
+// ProtectedRoute.js
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import SignIn from '../pages/SignIn';
+import { useAuth } from '../hooks/useAuth';
 
 const ProtectedRoute = () => {
-  // Check localStorage for login status
-  const isSignedIn = localStorage.getItem('loginStatus') === 'true';
+  const { isLoggedIn } = useAuth();
 
-  return isSignedIn ? <Outlet /> : <SignIn />;
+  return isLoggedIn ? <Outlet /> : <SignIn />;
 };
 
 export default ProtectedRoute;

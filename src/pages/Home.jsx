@@ -5,13 +5,21 @@ import Grid from '@mui/material/Grid2';
 import Products from '../components/products/Products';
 import SearchInput from '../components/SearchInput';
 import PaginationComp from '../components/PaginationComp';
-import SortProduct from '../components/SortProduct';
+import Sort from '../components/Sort';
 import useProduct from '../hooks/useProduct';
 import PageTitle from '../components/PageTitle';
+import { sortOptionsForProducts } from '../constant/sortingOptions';
+import ChatBot from '../components/ChatBot';
 
 const Home = () => {
-  const { pageNumber, setPageNumber, totalPages, setSearchValue } =
-    useProduct();
+  const {
+    pageNumber,
+    setPageNumber,
+    totalPages,
+    setSearchValue,
+    sortOrder,
+    setSortOrder,
+  } = useProduct();
 
   return (
     <Container>
@@ -35,7 +43,11 @@ const Home = () => {
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <SortProduct />
+            <Sort
+              options={sortOptionsForProducts}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
+            />
           </Grid>
         </Grid>
       </Box>
@@ -51,6 +63,8 @@ const Home = () => {
           totalPages={totalPages}
         />
       </Box>
+
+      <ChatBot />
     </Container>
   );
 };

@@ -5,9 +5,11 @@ import { styled } from '@mui/system';
 import { CheckCircle } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 
+import PageTitle from "../components/PageTitle"
 const About = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
+      <PageTitle title="About"/>
       <Typography variant="h3" gutterBottom align="center" color="primary">
         About Us
       </Typography>

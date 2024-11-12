@@ -72,6 +72,8 @@ export const CartProvider = ({ children }) => {
     saveCartToLocalStorage(cart);
   }, [cart]);
 
+  console.log(cart);
+
   return (
     <CartContext.Provider
       value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}
